@@ -19,26 +19,13 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-	<title></title>
-	<link rel="stylesheet" href="index.css" />
-	 <style>
-		.avatar {
-			  vertical-align: middle;
-			  width: 100px;
-			  height: 100px;
-			  border-radius: 50%;
-		}
-	</style>
-</head>
-<body>
+	<?php include('templates/header.php'); ?>
 	<?php if($userexists): ?>
 		Welcome <?php echo htmlspecialchars($userexists["Uname"]); ?>
 		<h4><?php echo htmlspecialchars($userexists['FirstName']); ?></h4>
 		<p>Created by <?php echo htmlspecialchars($userexists['Email']); ?></p>
 		<p><?php echo date($userexists['Created']); ?></p>			
-	<?php else: ?>
-		<?php echo "In else stmt"?> </php>
+	<?php else: ?>		
 		<form action="./index.php" method="post">
     			<img src="images/img_avatar_unisex.png" alt="Avatar" class="avatar">
 
@@ -62,5 +49,5 @@
 		  	</div>
 		</form>		
 	<?php endif;?>
-</body>
+	<?php include('templates/footer.php'); ?>
 </html>
