@@ -1,53 +1,75 @@
-<?php
-	include('config/db_connect.php');
-	$userexists = [];
+<?php 
 
-	if(isset($_POST['uname'])){
-		$usr = mysqli_real_escape_string($conn, $_POST['uname']);
-		$passwd = mysqli_real_escape_string($conn, $_POST['psw']);
+// MySQLi or PDO
 
-		$sql = "select * from book_users where Uname = '$usr' and PWD = '$passwd'";
-		
-		$results = mysqli_query($conn,$sql);
+include('config/db_connect.php');
 
-		$userexists = mysqli_fetch_assoc($results);
+	$sql = "SELECT scp.scp_id, s.Shop_Name, pc.PC_Type, p.Product_Name FROM ";
+	$sql = $sql."shop AS s, product_category AS pc, products AS p, shop_category_product AS scp WHERE ";
+	$sql = $sql."s.Shop_id = scp.Shop_id AND pc.PC_id = scp.PC_id AND p.Product_id = scp.Product_id and quantity > 0";
+	$sql = $sql." order by s.Shop_Name, pc.PC_Type";
 
-		mysqli_free_result($results);
-		mysqli_close($conn);
+	// Make query to get data
+	$result = mysqli_query($conn, $sql);
+	if(!$result){
+		echo 'Error in query'.mysqli_error($conn);
 	}
+
+	// fetch result into array
+	$shops = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+	// free result from memory
+	mysqli_free_result($result);
+
+	// close connection
+	mysqli_close($conn);
 ?>
 
 <!DOCTYPE html>
 <html>
+	
 	<?php include('templates/header.php'); ?>
-	<?php if($userexists): ?>
-		Welcome <?php echo htmlspecialchars($userexists["Uname"]); ?>
-		<h4><?php echo htmlspecialchars($userexists['FirstName']); ?></h4>
-		<p>Created by <?php echo htmlspecialchars($userexists['Email']); ?></p>
-		<p><?php echo date($userexists['Created']); ?></p>			
-	<?php else: ?>		
-		<form action="./index.php" method="post">
-    			<img src="images/img_avatar_unisex.png" alt="Avatar" class="avatar">
 
-		  	<div class="container">
-		    	<label for="uname"><b>Username</b></label>
-		    	<input type="text" placeholder="Enter Username" name="uname" required>
+	<h4 class="center grey-text"> Shoppers Stop! </h4>
 
-		    	<label for="psw"><b>Password</b></label>
-		    	<input type="password" placeholder="Enter Password" name="psw" required>
-		        
-		    	<button type="submit">Login</button>
-		    	<label> 
-		    	   	<input type="checkbox" checked="checked" name="remember"> Remember me
-		    	</label>
-		  	</div>
+	<div class="container">		
+		<?php $last_shop_name = $last_cat_name = ""; ?>
+		<table>
+		<?php foreach ($shops as $shop): ?>				
+			<tr>
+				<td>
+					<div class="card-content center">	
+						<?php 
+							if (strcmp($last_shop_name,$shop['Shop_Name']) != 0 ) {
+								echo htmlspecialchars($shop['Shop_Name']); 
+								$last_cat_name = "";
+							}
+						?>				
+					</div>	
+				</td>
+				<td>
+					<div class="card-content center">
+						<?php if (strcmp($last_cat_name,$shop['PC_Type']) != 0 ) { 
+								echo htmlspecialchars($shop['PC_Type']); 
+							}
+						?>	
+					</div>
+				</td>
+				<td>
+					<div class="card-content center">	
+							<?php echo htmlspecialchars($shop['Product_Name']) ?>			
+					</div>
+				</td>	
+				<td>
+						<a class="brand-text" href="details.php?id=<?php echo $shop['scp_id'] ?>">More Info</a>
+				</td>
+			</tr>					
+			<?php	$last_shop_name = $shop['Shop_Name']; 
+					$last_cat_name = $shop['PC_Type'];
+			endforeach; ?>
+		</table>
+	</div>
 
-		  	<div class="container" style="background-color:#f1f1f1">
-		    	<button type="button" class="cancelbtn">Cancel</button>
-		    	<span class="psw">Forgot <a href="#">password?</a></span>
-		    	Create <a href="NewUser.php">  User </a>
-		  	</div>
-		</form>		
-	<?php endif;?>
 	<?php include('templates/footer.php'); ?>
+
 </html>

@@ -87,7 +87,7 @@
 				$gender = mysqli_real_escape_string($conn,$_POST['gender']);
 				$usrname = mysqli_real_escape_string($conn,$_POST['usrname']);
 				$password = mysqli_real_escape_string($conn,$_POST['password']);
-				$sql = "INSERT INTO book_usrs (FirstName, Email, Gender, UserName, Passwd) VALUES ('$fname','$email','$gender','$usrname','$password')";
+				$sql = "INSERT INTO Shopper (Shopper_FName, Shopper_Email, Shopper_Gender, Shopper_Uname, Shopper_Passwd) VALUES ('$fname','$email','$gender','$usrname','$password')";
 				echo $sql;
 				if(mysqli_query($conn, $sql)){
 					header('Location: index.php');

@@ -1,2 +1,2 @@
-# LetsBook
-Small project to explorer PHP, GitHub, AWS, etc.
+# Shopper 
+Small project using PHP, Mysql, HTML, CSS

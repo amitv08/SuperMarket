@@ -1,6 +1,6 @@
 <?php
 
-$conn = mysqli_connect('127.0.0.1', 'admin', 'admin123', 'mybooks');
+$conn = mysqli_connect('127.0.0.1', 'admin', 'admin123', 'supermarket');
 
 // check connection
 if(!$conn){
